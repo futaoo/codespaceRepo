@@ -1,0 +1,11 @@
+prefixes:
+  ex: "http://www.example.com/"
+
+mappings:
+  station:
+    sources:
+      - ['/home/codespace/workspace/codespaceRepo/datasets/dublinRecord.csv~csv']
+    s: http://example.com/station/$(STATION)
+    po:
+      - [a, ex:Station]
+      - [ex:name, $(NAME)]
