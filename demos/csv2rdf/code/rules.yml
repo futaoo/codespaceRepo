@@ -4,8 +4,8 @@ prefixes:
 mappings:
   station:
     sources:
-      - ['/home/codespace/workspace/codespaceRepo/datasets/dublinRecord.csv~csv']
-    s: http://example.com/station/$(STATION)
+      - ['../datasets/dublinRecord.csv~csv']
+    s: http://example.com/Station/$(STATION)
     po:
       - [a, ex:Station]
-      - [ex:name, $(NAME)]
+      - [ex:Property/name, $(NAME)]

@@ -11,13 +11,13 @@
 
 :map_station_0 rml:logicalSource :source_0.
 :source_0 a rml:LogicalSource;
-    rml:source "/home/codespace/workspace/codespaceRepo/datasets/dublinRecord.csv";
+    rml:source "../datasets/dublinRecord.csv";
     rml:referenceFormulation ql:CSV.
 :map_station_0 a rr:TriplesMap;
     rdfs:label "station".
 :s_0 a rr:SubjectMap.
 :map_station_0 rr:subjectMap :s_0.
-:s_0 rr:template "http://example.com/{STATION}".
+:s_0 rr:template "http://example.com/Station/{STATION}".
 :pom_0 a rr:PredicateObjectMap.
 :map_station_0 rr:predicateObjectMap :pom_0.
 :pm_0 a rr:PredicateMap.
@@ -31,7 +31,7 @@
 :map_station_0 rr:predicateObjectMap :pom_1.
 :pm_1 a rr:PredicateMap.
 :pom_1 rr:predicateMap :pm_1.
-:pm_1 rr:constant ex:name.
+:pm_1 rr:constant <http://www.example.com/Property/name>.
 :pom_1 rr:objectMap :om_1.
 :om_1 a rr:ObjectMap;
     rml:reference "NAME";
