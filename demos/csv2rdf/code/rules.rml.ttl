@@ -11,7 +11,7 @@
 
 :map_station_0 rml:logicalSource :source_0.
 :source_0 a rml:LogicalSource;
-    rml:source "../datasets/dublinRecord.csv";
+    rml:source "./datasets/dublinRecord.csv";
     rml:referenceFormulation ql:CSV.
 :map_station_0 a rr:TriplesMap;
     rdfs:label "station".

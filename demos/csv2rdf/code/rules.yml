@@ -4,8 +4,10 @@ prefixes:
 mappings:
   station:
     sources:
-      - ['../datasets/dublinRecord.csv~csv']
+      - ['./datasets/dublinRecord.csv~csv']
     s: http://example.com/Station/$(STATION)
     po:
       - [a, ex:Station]
       - [ex:Property/name, $(NAME)]
+
+      
