@@ -1,13 +1,59 @@
 prefixes:
-  ex: "http://www.example.com/"
+  eca: "http://example.org/eca/ont/" 
+  wgs84: "http://www.w3.org/2003/01/geo/wgs84_pos#"
+  dul: "http://www.loa-cnr.it/ontologies/DUL.owl#"
+  qu: "http://purl.oclc.org/NET/ssnx/qu/qu"
+  qudt: <http://qudt.org/1.1/schema/qudt#>
+  unit: <http://qudt.org/1.1/vocab/unit#>
+  
 
 mappings:
   station:
     sources:
       - ['./datasets/dublinRecord.csv~csv']
-    s: http://example.com/Station/$(STATION)
+    s: eca:sys_$(STATION)
     po:
-      - [a, ex:Station]
-      - [ex:Property/name, $(NAME)]
+      - [a, sosa:Platform]
+      - [eca:name, $(NAME),en~lang]
+      - p: dul:hasLocation
+        o: 
+          mapping: stationLocation
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(STATION),s]
+              - [str2, $(STATION),o]
+
+  stationLocation:
+    sources:
+      - ['./datasets/dublinRecord.csv~csv']
+    s: eca:station_loc_$(STATION)
+    po:
+      - [wgs84:lat, $(LATITUDE), xsd:double]
+      - [wgs84:lon, $(LONGITUDE), xsd:double]
+      - [wgs84:alt, $(ELEVATION), xsd:double]
+
+  prcpDailySummary:
+    sources:
+      - ['./datasets/dublinRecord.csv~csv']
+    s: eca:station_drec_prcp_$(STATION)_$(DATE)
+    po:
+      - [a, sosa:Result]
+      - [a, qudt:QuantityValue]
+      - [qudt:numericValue  , $(PRCP), xsd:double]
+      - [qudt:unit, unit:]
+
+  temperatureDailyRecord:
+    sources:
+      - ['./datasets/dublinRecord.csv~csv']
+    s: eca:sys_drec_tmprt_$(STATION)_$(DATE)
+    po:
+      - [a, sosa:Result]
+      - [eca:value_temprt_max, $(TMAX)]
+      - [eca:value_temprt_min, $(TMIN)]
+      - [eca:value_temprt_avg, $(TAVG)]
+
+    
+
 
       
