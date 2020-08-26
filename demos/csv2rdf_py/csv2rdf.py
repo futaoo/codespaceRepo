@@ -28,6 +28,8 @@ with open(csvpath) as f:
 
 numof_rowitems = len(record_head)
 
+#print(record_head)
+
 triples_lst = list()
 
 for row in record_rows:
@@ -35,12 +37,13 @@ for row in record_rows:
     iri_station_location = URIRef(eca_str + row[0] + "/" + "location")
     iri_station_sensor_prcp =  URIRef(eca_str + "sensor/" + row[0] + "/" + "prcp")
     iri_station_sensor_tprt =  URIRef(eca_str + "sensor/" + row[0] + "/" + "tprt")
-    bn_station_sensor_prcp_observation = BNode() #URIRef(eca_str + "obsv/" + row[0] + "/"+ "sensor/" + "prcp/" + row[5])
-    bn_station_sensor_tprt_observation = BNode() #URIRef(eca_str + "obsv/" + row[0] + "/"+ "sensor/" + "tprt/" + row[5])
-    bn_prcp_result = BNode()
-    bn_tprt_result_avg = BNode()
-    bn_tprt_result_max = BNode()
-    bn_tprt_result_min = BNode()
+    bn_station_sensor_prcp_observation = URIRef(eca_str + "obsv/" + row[0] + "/"+ "sensor/" + "prcp/" + row[5])
+    bn_station_sensor_tprt_observation = URIRef(eca_str + "obsv/" + row[0] + "/"+ "sensor/" + "tprt/" + row[5])
+
+    bn_prcp_result = URIRef(eca_str + row[0] + "/" + "result/" + "sensor/" + "prcp/" + row[5]) #BNode() 
+    bn_tprt_result_avg = URIRef(eca_str + row[0] + "/" + "result/" + "sensor/" + "tprt/" + "avg/" + row[5]) #BNode()
+    bn_tprt_result_max = URIRef(eca_str + row[0] + "/" + "result/" + "sensor/" + "tprt/" + "max/" + row[5]) #BNode()
+    bn_tprt_result_min = URIRef(eca_str + row[0] + "/" + "result/" + "sensor/" + "tprt/" + "min/" + row[5]) #BNode()
 
     triples_station = [(iri_station, RDF.type, SOSA.Platform),(iri_station, RDFS.label, Literal(row[1])),(iri_station, dul.hasLocation, iri_station_location)]
 
@@ -51,25 +54,32 @@ for row in record_rows:
     
     triples_sensor.extend([(iri_station_sensor_tprt, RDF.type, SOSA.Sensor),(iri_station_sensor_tprt, SOSA.isHostedby, iri_station),
     (iri_station_sensor_tprt, SOSA.observes, cf.air_temperature)])
-    
-    triples_abservation = [(bn_station_sensor_prcp_observation, RDF.type, SOSA.Observation),(bn_station_sensor_prcp_observation, SOSA.hasResult, bn_prcp_result),
-    (bn_station_sensor_prcp_observation, SOSA.resultTime,Literal(row[5],datatype=XSD.date)),(bn_station_sensor_prcp_observation, SOSA.observedProperty, cf.precipitation_amount),
-    (bn_station_sensor_prcp_observation, SOSA.madeBySensor, iri_station_sensor_prcp)]
-    
-    triples_abservation.extend([(bn_station_sensor_tprt_observation, RDF.type, SOSA.Observation), (bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_avg),
-    (bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_max),(bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_min),
-    (bn_station_sensor_tprt_observation, SOSA.resultTime, Literal(row[5],datatype=XSD.date)),(bn_station_sensor_tprt_observation, SOSA.observedProperty, cf.air_temperature),
-    (bn_station_sensor_tprt_observation, SOSA.madeBySensor, iri_station_sensor_tprt)])
-    
-    triples_result = [(bn_prcp_result, RDF.type, qudt.QuantityValue),(bn_prcp_result, qudt.unit, unit.Millimeter),(bn_prcp_result, qudt.numericValue, Literal(row[record_head.index("PRCP")]))]
-    
-    triples_result.extend([(bn_tprt_result_avg, RDFS.label, Literal("avg")), (bn_tprt_result_avg, RDF.type, qudt.QuantityValue),(bn_tprt_result_avg, qudt.unit, unit.DegreeFahrenheit),(bn_tprt_result_avg, qudt.numericValue, Literal(row[record_head.index("TAVG")]))])
-    triples_result.extend([(bn_tprt_result_max, RDFS.label, Literal("max")), (bn_tprt_result_max, RDF.type, qudt.QuantityValue),(bn_tprt_result_max, qudt.unit, unit.DegreeFahrenheit),(bn_tprt_result_max, qudt.numericValue, Literal(row[record_head.index("TMAX")]))])
-    triples_result.extend([(bn_tprt_result_min, RDFS.label, Literal("min")), (bn_tprt_result_min, RDF.type, qudt.QuantityValue),(bn_tprt_result_min, qudt.unit, unit.DegreeFahrenheit),(bn_tprt_result_min, qudt.numericValue, Literal(row[record_head.index("TMIN")]))])
 
+    triples_result = []
     
-    
-    triples_lst += triples_station+triples_station_location + triples_sensor + triples_abservation + triples_result
+    triples_abservation = [(bn_station_sensor_prcp_observation, RDF.type, SOSA.Observation),(bn_station_sensor_prcp_observation, SOSA.resultTime,Literal(row[5],datatype=XSD.date)),
+    (bn_station_sensor_prcp_observation, SOSA.observedProperty, cf.precipitation_amount),(bn_station_sensor_prcp_observation, SOSA.madeBySensor, iri_station_sensor_prcp)]
+
+    triples_abservation.extend([(bn_station_sensor_tprt_observation, RDF.type, SOSA.Observation), (bn_station_sensor_tprt_observation, SOSA.resultTime, Literal(row[5],datatype=XSD.date)),
+    (bn_station_sensor_tprt_observation, SOSA.observedProperty, cf.air_temperature),(bn_station_sensor_tprt_observation, SOSA.madeBySensor, iri_station_sensor_tprt)])
+
+    if row[record_head.index("PRCP")] != "" :
+        triples_abservation.extend([(bn_station_sensor_prcp_observation, SOSA.hasResult, bn_prcp_result)])
+        triples_result.extend([(bn_prcp_result, RDF.type, SOSA.Result),(bn_prcp_result, RDF.type, qudt.QuantityValue),(bn_prcp_result, qudt.unit, unit.Millimeter),(bn_prcp_result, qudt.numericValue, Literal(row[record_head.index("PRCP")],datatype=XSD.float))])
+
+    if row[record_head.index("TAVG")] != "" :
+        triples_abservation.extend([(bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_avg)])
+        triples_result.extend([(bn_tprt_result_avg, RDFS.label, Literal("avg")), (bn_tprt_result_avg, RDF.type, SOSA.Result), (bn_tprt_result_avg, RDF.type, qudt.QuantityValue), (bn_tprt_result_avg, qudt.unit, unit.DegreeFahrenheit),(bn_tprt_result_avg, qudt.numericValue, Literal(row[record_head.index("TAVG")],datatype=XSD.float))])
+    if row[record_head.index("TMIN")] != "" :
+        triples_abservation.extend([(bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_min)])
+        triples_result.extend([(bn_tprt_result_min, RDFS.label, Literal("min")), (bn_tprt_result_min, RDF.type, SOSA.Result), (bn_tprt_result_min, RDF.type, qudt.QuantityValue), (bn_tprt_result_min, qudt.unit, unit.DegreeFahrenheit),(bn_tprt_result_min, qudt.numericValue, Literal(row[record_head.index("TMIN")],datatype=XSD.float))])
+    if row[record_head.index("TMAX")] != "" :
+        triples_abservation.extend([(bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_max)])
+        triples_result.extend([(bn_tprt_result_max, RDFS.label, Literal("max")), (bn_tprt_result_max, RDF.type, SOSA.Result), (bn_tprt_result_max, RDF.type, qudt.QuantityValue), (bn_tprt_result_max, qudt.unit, unit.DegreeFahrenheit),(bn_tprt_result_max, qudt.numericValue, Literal(row[record_head.index("TMAX")],datatype=XSD.float))])
+
+    triples_temp = triples_station+triples_station_location + triples_sensor + triples_abservation + triples_result
+
+    triples_lst += triples_temp
 
 
 g = Graph()
