@@ -20,7 +20,7 @@ eca_str = "http://example.org/eca/ont/"
 
 
 
-csvpath = './datasets/dublinRecord2.csv'
+csvpath = './datasets/dublin_weather_1867_2020.csv'
 with open(csvpath) as f:
     csvreader =  csv.reader(f)
     record_head = list(next(csvreader))
@@ -47,7 +47,7 @@ for row in record_rows:
 
     triples_station = [(iri_station, RDF.type, SOSA.Platform),(iri_station, RDFS.label, Literal(row[1])),(iri_station, dul.hasLocation, iri_station_location)]
 
-    triples_station_location = [(iri_station_location, wgs84.lat, Literal(row[2])),(iri_station_location, wgs84.lon, Literal(row[3])),(iri_station_location, wgs84.alt, Literal(row[4]))]
+    triples_station_location = [(iri_station_location, eca.locationID, Literal(row[0])),(iri_station_location, wgs84.lat, Literal(row[2])),(iri_station_location, wgs84.lon, Literal(row[3])),(iri_station_location, wgs84.alt, Literal(row[4]))]
     
     triples_sensor = [(iri_station_sensor_prcp, RDF.type, SOSA.Sensor),(iri_station_sensor_prcp, SOSA.isHostedby, iri_station),
     (iri_station_sensor_prcp, SOSA.observes, cf.precipitation_amount)]
@@ -65,7 +65,7 @@ for row in record_rows:
 
     if row[record_head.index("PRCP")] != "" :
         triples_abservation.extend([(bn_station_sensor_prcp_observation, SOSA.hasResult, bn_prcp_result)])
-        triples_result.extend([(bn_prcp_result, RDF.type, SOSA.Result),(bn_prcp_result, RDF.type, qudt.QuantityValue),(bn_prcp_result, qudt.unit, unit.Millimeter),(bn_prcp_result, qudt.numericValue, Literal(row[record_head.index("PRCP")],datatype=XSD.float))])
+        triples_result.extend([(bn_prcp_result, RDF.type, SOSA.Result),(bn_prcp_result, RDF.type, qudt.QuantityValue),(bn_prcp_result, qudt.unit, unit.Inch),(bn_prcp_result, qudt.numericValue, Literal(row[record_head.index("PRCP")],datatype=XSD.float))])
 
     if row[record_head.index("TAVG")] != "" :
         triples_abservation.extend([(bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_avg)])
