@@ -20,7 +20,7 @@ eca_str = "http://example.org/eca/ont/"
 
 
 
-csvpath = './datasets/dublin_weather_1867_2020.csv'
+csvpath = './datasets/shanghai.csv'
 with open(csvpath) as f:
     csvreader =  csv.reader(f)
     record_head = list(next(csvreader))
