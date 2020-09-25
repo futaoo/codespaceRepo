@@ -31,7 +31,7 @@ triples_classes = [(eca_tprtSensor, RDFS.subClassOf, SOSA.Sensor), (eca_prcpSens
 
 
 
-csvpath = './datasets/shanghaifull.csv'
+csvpath = './datasets/dublinfull.csv'
 with open(csvpath) as f:
     csvreader =  csv.reader(f)
     record_head = list(next(csvreader))
