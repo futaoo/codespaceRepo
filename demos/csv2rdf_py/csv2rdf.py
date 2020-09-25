@@ -20,6 +20,7 @@ eca_str = "http://example.org/eca/ont/"
 
 
 
+
 csvpath = './datasets/shanghaifull.csv'
 with open(csvpath) as f:
     csvreader =  csv.reader(f)
