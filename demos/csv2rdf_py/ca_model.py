@@ -17,12 +17,12 @@ cf =  Namespace("http://purl.oclc.org/NET/ssnx/cf/cf-feature")
 
 eca_str = "http://example.org/eca/ont/"
 
-eca_tprtSensor = URIRef(eca_str + "/Class/TemperatureSensor")
-eca_prcpSensor = URIRef(eca_str + "/Class/PrecipitationSensor")
-eca_tprtObservation = URIRef(eca_str + "/Class/TemperatureObservation")
-eca_prcpObservation = URIRef(eca_str + "/Class/PrecipitationObservation")
-eca_tprtResult = URIRef(eca_str + "/Class/TemperatureResult")
-eca_prcpResult = URIRef(eca_str + "/Class/PrecipitationResult")
+eca_tprtSensor = URIRef(eca_str + "Class/TemperatureSensor")
+eca_prcpSensor = URIRef(eca_str + "Class/PrecipitationSensor")
+eca_tprtObservation = URIRef(eca_str + "Class/TemperatureObservation")
+eca_prcpObservation = URIRef(eca_str + "Class/PrecipitationObservation")
+eca_tprtResult = URIRef(eca_str + "Class/TemperatureResult")
+eca_prcpResult = URIRef(eca_str + "Class/PrecipitationResult")
 
 triples_classes = [(eca_tprtSensor, RDFS.subClassOf, SOSA.Sensor), (eca_prcpSensor, RDFS.subClassOf, SOSA.Sensor), 
 (eca_tprtObservation, RDFS.subClassOf, SOSA.Observation), (eca_prcpObservation, RDFS.subClassOf, SOSA.Observation), 
