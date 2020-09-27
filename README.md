@@ -1,7 +1,7 @@
 # An Ontology Model for Climate Data Analysis
 This repository includes a complete collection of codes required to generate the results and diagrams presented in the paper: 
 > published details of the paper
-## Project Description
+## Folder Description
 ### An overview of the folder structure
 ```
 paper_ca_ontology
