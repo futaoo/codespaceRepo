@@ -22,7 +22,7 @@ paper_ca_ontology
     └── temperature.png
 ```
 
-`paper_ca_ontology/` Root directory, `csv2rdf_py/` includes the `ca_model.py` file which uses the raw csv data downloaded from [NOAA](https://www.ncdc.noaa.gov/cdo-web/) then stored in `datasets/` to generate the triples in line with CA ontology.
+`paper_ca_ontology/` is the project root directory. `csv2rdf_py/` includes the `ca_model.py` file which reads the downloaded [NOAA Climate](https://www.ncdc.noaa.gov/cdo-web/) csv tables from `datasets/`  then converting them to the triples in line with CA ontology.
 
-`dataplot/` contains a group of scripts `*.py` that make use of a group of `*.csv` files which are the csv form of the solutions to the queries executed in our Fuseki endpoint to result the pictures `*.png` presented in our paper. **Note:** 'p' or 'P' in file's name represents 'precipitation' and 't' or 'T' means 'temperature'.
+`dataplot/` contains a group of scripts `*.py` that make use of a group of `*.csv` files which are the csv form of the solutions to the SPARQL queries executed in our Fuseki endpoint, to result the pictures `*.png` presented in our paper. **Note:** 'p' or 'P' in file's name represents 'precipitation' and 't' or 'T' means 'temperature'.
  
