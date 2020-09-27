@@ -105,7 +105,7 @@ g.bind("sosa", SOSA)
 g.bind("rdfs", RDFS)
 g.bind("rdf", RDF)
 
-
+ 
 
 for triple in triples_lst:
     g.add(triple)
