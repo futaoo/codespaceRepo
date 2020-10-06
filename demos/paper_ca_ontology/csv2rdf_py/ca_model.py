@@ -31,7 +31,7 @@ triples_classes = [(ca_tprtSensor, RDFS.subClassOf, SOSA.Sensor), (ca_prcpSensor
 
 
 
-csvpath = './datasets/shanghaifull.csv'
+csvpath = './datasets/Irelandfull_1951_2020.csv'
 with open(csvpath) as f:
     csvreader =  csv.reader(f)
     record_head = list(next(csvreader))
@@ -44,21 +44,23 @@ numof_rowitems = len(record_head)
 triples_lst = list()
 
 for row in record_rows:
-    iri_station =  URIRef(ca_str + row[0])
-    iri_station_location = URIRef(ca_str + row[0] + "/" + "location")
-    iri_station_sensor_prcp =  URIRef(ca_str + "sensor/" + row[0] + "/" + "prcp")
-    iri_station_sensor_tprt =  URIRef(ca_str + "sensor/" + row[0] + "/" + "tprt")
-    bn_station_sensor_prcp_observation = URIRef(ca_str + "obsv/" + row[0] + "/"+ "sensor/" + "prcp/" + row[5])
-    bn_station_sensor_tprt_observation = URIRef(ca_str + "obsv/" + row[0] + "/"+ "sensor/" + "tprt/" + row[5])
+    iri_station =  URIRef(ca_str + row[record_head.index("STATION")])
+    iri_station_location = URIRef(ca_str + row[record_head.index("STATION")] + "/" + "location")
+    iri_station_sensor_prcp =  URIRef(ca_str + "sensor/" + row[record_head.index("STATION")] + "/" + "prcp")
+    iri_station_sensor_tprt =  URIRef(ca_str + "sensor/" + row[record_head.index("STATION")] + "/" + "tprt")
+    bn_station_sensor_prcp_observation = URIRef(ca_str + "obsv/" + row[record_head.index("STATION")] + "/"+ "sensor/" + "prcp/" + row[record_head.index("DATE")])
+    bn_station_sensor_tprt_observation = URIRef(ca_str + "obsv/" + row[record_head.index("STATION")] + "/"+ "sensor/" + "tprt/" + row[record_head.index("DATE")])
 
-    bn_prcp_result = URIRef(ca_str + row[0] + "/" + "result/" + "sensor/" + "prcp/" + row[5]) #BNode() 
-    bn_tprt_result_avg = URIRef(ca_str + row[0] + "/" + "result/" + "sensor/" + "tprt/" + "avg/" + row[5]) #BNode()
-    bn_tprt_result_max = URIRef(ca_str + row[0] + "/" + "result/" + "sensor/" + "tprt/" + "max/" + row[5]) #BNode()
-    bn_tprt_result_min = URIRef(ca_str + row[0] + "/" + "result/" + "sensor/" + "tprt/" + "min/" + row[5]) #BNode()
+    bn_prcp_result_prcp = URIRef(ca_str + row[record_head.index("STATION")] + "/" + "result/" + "sensor/" + "prcp/" + "prcp/" + row[record_head.index("DATE")]) #BNode() 
+    bn_prcp_result_snwd = URIRef(ca_str + row[record_head.index("STATION")] + "/" + "result/" + "sensor/" + "prcp/" + "snwd/" + row[record_head.index("DATE")]) #BNode()
+    bn_tprt_result_avg = URIRef(ca_str + row[record_head.index("STATION")] + "/" + "result/" + "sensor/" + "tprt/" + "avg/" + row[record_head.index("DATE")]) #BNode()
+    bn_tprt_result_max = URIRef(ca_str + row[record_head.index("STATION")] + "/" + "result/" + "sensor/" + "tprt/" + "max/" + row[record_head.index("DATE")]) #BNode()
+    bn_tprt_result_min = URIRef(ca_str + row[record_head.index("STATION")] + "/" + "result/" + "sensor/" + "tprt/" + "min/" + row[record_head.index("DATE")]) #BNode()
 
-    triples_station = [(iri_station, RDF.type, SOSA.Platform),(iri_station, RDFS.label, Literal(row[1])),(iri_station, dul.hasLocation, iri_station_location)]
+    triples_station = [(iri_station, RDF.type, SOSA.Platform),(iri_station, RDFS.label, Literal(row[record_head.index("NAME")])),(iri_station, dul.hasLocation, iri_station_location)]
 
-    triples_station_location = [(iri_station_location, ca.locationID, Literal(row[0])),(iri_station_location, wgs84.lat, Literal(row[2])),(iri_station_location, wgs84.lon, Literal(row[3])),(iri_station_location, wgs84.alt, Literal(row[4]))]
+    triples_station_location = [(iri_station_location, ca.locationID, Literal(row[record_head.index("STATION")])),(iri_station_location, wgs84.lat, Literal(row[record_head.index("LATITUDE")])),
+    (iri_station_location, wgs84.lon, Literal(row[record_head.index("LONGITUDE")])),(iri_station_location, wgs84.alt, Literal(row[record_head.index("ELEVATION")]))]
     
     triples_sensor = [(iri_station_sensor_prcp, RDF.type, ca_prcpSensor),(iri_station_sensor_prcp, SOSA.isHostedby, iri_station),
     (iri_station_sensor_prcp, SOSA.observes, cf.precipitation_amount)]
@@ -68,15 +70,19 @@ for row in record_rows:
 
     triples_result = []
     
-    triples_abservation = [(bn_station_sensor_prcp_observation, RDF.type, ca_prcpObservation),(bn_station_sensor_prcp_observation, SOSA.resultTime,Literal(row[5],datatype=XSD.date)),
+    triples_abservation = [(bn_station_sensor_prcp_observation, RDF.type, ca_prcpObservation),(bn_station_sensor_prcp_observation, SOSA.resultTime,Literal(row[record_head.index("DATE")],datatype=XSD.date)),
     (bn_station_sensor_prcp_observation, SOSA.observedProperty, cf.precipitation_amount),(bn_station_sensor_prcp_observation, SOSA.madeBySensor, iri_station_sensor_prcp)]
 
-    triples_abservation.extend([(bn_station_sensor_tprt_observation, RDF.type, ca_tprtObservation), (bn_station_sensor_tprt_observation, SOSA.resultTime, Literal(row[5],datatype=XSD.date)),
+    triples_abservation.extend([(bn_station_sensor_tprt_observation, RDF.type, ca_tprtObservation), (bn_station_sensor_tprt_observation, SOSA.resultTime, Literal(row[record_head.index("DATE")],datatype=XSD.date)),
     (bn_station_sensor_tprt_observation, SOSA.observedProperty, cf.air_temperature),(bn_station_sensor_tprt_observation, SOSA.madeBySensor, iri_station_sensor_tprt)])
 
     if row[record_head.index("PRCP")] != "" :
-        triples_abservation.extend([(bn_station_sensor_prcp_observation, SOSA.hasResult, bn_prcp_result)])
-        triples_result.extend([(bn_prcp_result, RDF.type, ca_prcpResult),(bn_prcp_result, RDF.type, qudt.QuantityValue),(bn_prcp_result, qudt.unit, unit.Inch),(bn_prcp_result, qudt.numericValue, Literal(row[record_head.index("PRCP")],datatype=XSD.float))])
+        triples_abservation.extend([(bn_station_sensor_prcp_observation, SOSA.hasResult, bn_prcp_result_prcp)])
+        triples_result.extend([(bn_prcp_result_prcp, RDFS.label, Literal("precipitation")), (bn_prcp_result_prcp, RDF.type, ca_prcpResult),(bn_prcp_result_prcp, RDF.type, qudt.QuantityValue),(bn_prcp_result_prcp, qudt.unit, unit.Inch),(bn_prcp_result_prcp, qudt.numericValue, Literal(row[record_head.index("PRCP")],datatype=XSD.float))])
+    if row[record_head.index("SNWD")] != "" :
+        triples_abservation.extend([(bn_station_sensor_prcp_observation, SOSA.hasResult, bn_prcp_result_snwd)])
+        triples_result.extend([(bn_prcp_result_snwd, RDFS.label, Literal("snow_depth")), (bn_prcp_result_snwd, RDF.type, ca_prcpResult),(bn_prcp_result_snwd, RDF.type, qudt.QuantityValue),(bn_prcp_result_snwd, qudt.unit, unit.Inch),(bn_prcp_result_snwd, qudt.numericValue, Literal(row[record_head.index("SNWD")],datatype=XSD.float))])
+
 
     if row[record_head.index("TAVG")] != "" :
         triples_abservation.extend([(bn_station_sensor_tprt_observation, SOSA.hasResult, bn_tprt_result_avg)])
