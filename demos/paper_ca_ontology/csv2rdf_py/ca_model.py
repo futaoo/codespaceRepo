@@ -31,7 +31,7 @@ triples_classes = [(ca_tprtSensor, RDFS.subClassOf, SOSA.Sensor), (ca_prcpSensor
 
 
 
-csvpath = './datasets/73_78.csv'
+csvpath = './datasets/15_20.csv'
 with open(csvpath) as f:
     csvreader =  csv.reader(f)
     record_head = list(next(csvreader))
